@@ -475,13 +475,15 @@ impl Contact {
             comments: Some(comments),
         } = self
         {
+            // Single quote is used to force raw data (no formula parsing):
+            // https://webapps.stackexchange.com/a/97312/114756
             Some(vec![vec![
-                full_name.to_owned(),
-                phone_numbers.to_owned(),
-                address.to_owned(),
-                comments.to_owned(),
+                format!("'{}", full_name),
+                format!("'{}", phone_numbers),
+                format!("'{}", address),
+                format!("'{}", comments),
                 format!(
-                    "{}",
+                    "'{}",
                     chrono::Utc::now().with_timezone(&chrono::FixedOffset::east(3 * 3600))
                 ),
             ]])
