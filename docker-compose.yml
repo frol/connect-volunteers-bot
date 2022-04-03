@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - ./data:/data
+    ports:
+      - 6379:6379
+
+  bot:
+    build: ./
+    entrypoint: ["./connect-volunteers-bot"]
