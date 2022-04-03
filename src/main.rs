@@ -424,6 +424,12 @@ async fn handle_awaiting_contact_information(
                 }
             };
             if confirmed {
+                log::info!(
+                    "Saving information: {:?} user submits {:?} {:?}...",
+                    msg.chat,
+                    help_kind,
+                    contact
+                );
                 contact.save(&app_state.sheets_api, help_kind).await?;
             }
             dialogue.update(State::Start).await?;
@@ -461,9 +467,7 @@ impl Contact {
             HelpKind::NeedEvacuation => "1as4OGhZLULiQFqjgbHqnbed2xbiA4fCBjyYRbXPzHCU",
             HelpKind::NeedHumanitarianHelp => "1MM-8rxEcoD0GGqdTmudgchqpLIcaTygTN1x95nNzpJE",
         };
-        // As the method needs a request, you would usually fill it with the desired information
-        // into the respective structure. Some of the parts shown here might not be applicable !
-        // Values shown here are possibly random and not representative !
+
         let values = if let Contact {
             full_name: Some(full_name),
             phone_numbers: Some(phone_numbers),
@@ -487,25 +491,17 @@ impl Contact {
 
         let req = ValueRange {
             major_dimension: Some("ROWS".to_owned()),
-            range: None, //Some("A2:B2".to_owned()),
+            range: None,
             values,
         };
 
-        // You can configure optional parameters by calling the respective setters at will, and
-        // execute the final call using `doit()`.
-        // Values shown here are possibly random and not representative !
         let save_response = sheets_api
             .spreadsheets()
             .values_append(req, spreadsheet_id, "Sheet1")
             .value_input_option("USER_ENTERED")
-            //.response_value_render_option("duo")
-            //.response_date_time_render_option("ipsum")
-            //.insert_data_option("gubergren")
             .include_values_in_response(true)
             .doit()
             .await?;
-
-        log::info!("Saved: {:?}", save_response);
 
         Ok(())
     }
