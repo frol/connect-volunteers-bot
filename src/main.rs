@@ -418,7 +418,7 @@ async fn handle_awaiting_contact_information(
                 _ => {
                     bot.send_message(
                         msg.chat.id,
-                        format!("Ви бажаєте відправити запит волонтерам? (відправте лише \"Так, відправити інформацію волонтерам\" або \"Ні, почати спочатку\""),
+                        "Ви бажаєте відправити запит волонтерам? (відправте лише \"Так, відправити інформацію волонтерам\" або \"Ні, почати спочатку\"",
                     ).await?;
                     return Ok(());
                 }
@@ -504,6 +504,8 @@ impl Contact {
             .include_values_in_response(true)
             .doit()
             .await?;
+        
+        log::debug!("Save response to {:?} {:?} is {:#?}", help_kind, self, save_response);
 
         Ok(())
     }
