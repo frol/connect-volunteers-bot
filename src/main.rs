@@ -142,11 +142,14 @@ async fn handle_start(
             bot.send_message(
                 msg.chat.id,
                 "Наразі в нас є можливість координувати водіїв, що допомогають з евакуацією, надавати гуманітарну допомогу, та ми завжди відкриті до корисних контактів. Оберіть один з варіантів.",
-            ).reply_markup(teloxide::types::KeyboardMarkup::new(vec![vec![
-                teloxide::types::KeyboardButton::new("Я водій з власним авто"),
-                teloxide::types::KeyboardButton::new("Можу збирати гуманітарну чи фінансову допомогу"),
-                teloxide::types::KeyboardButton::new("Корисні контакти"),
-            ]]))
+            ).reply_markup(teloxide::types::KeyboardMarkup::new(vec![
+                vec![
+                    teloxide::types::KeyboardButton::new("Я водій з власним авто"),
+                    teloxide::types::KeyboardButton::new("Можу збирати гуманітарну чи фінансову допомогу"),
+                    teloxide::types::KeyboardButton::new("Корисні контакти"),
+                ],
+                vec![teloxide::types::KeyboardButton::new("ПОВЕРНУТИСЬ В ПОЧАТОК")]
+            ]))
             .await?;
         }
         Some("Я потребую допомоги") => {
@@ -155,10 +158,15 @@ async fn handle_start(
                 msg.chat.id,
                 "Наразі ми координуємо запити на евакуацію та гуманітарну допомогу.",
             )
-            .reply_markup(teloxide::types::KeyboardMarkup::new(vec![vec![
-                teloxide::types::KeyboardButton::new("Евакуація"),
-                teloxide::types::KeyboardButton::new("Потрібна гуманітарна допомога"),
-            ]]))
+            .reply_markup(teloxide::types::KeyboardMarkup::new(vec![
+                vec![
+                    teloxide::types::KeyboardButton::new("Евакуація"),
+                    teloxide::types::KeyboardButton::new("Потрібна гуманітарна допомога"),
+                ],
+                vec![teloxide::types::KeyboardButton::new(
+                    "ПОВЕРНУТИСЬ В ПОЧАТОК",
+                )],
+            ]))
             .await?;
         }
         _ => {
@@ -206,6 +214,16 @@ async fn handle_awaiting_kind_of_help_providing(
                 })
                 .await?;
         }
+        Some("ПОВЕРНУТИСЬ В ПОЧАТОК") => {
+            dialogue.update(State::Start).await?;
+            bot.send_message(
+                msg.chat.id,
+                "Оберіть \"Я можу допомогти\" чи \"Я потребую допомоги\"",
+            )
+            .reply_markup(start_keyboard())
+            .await?;
+            return Ok(());
+        }
         _ => {
             log::info!(
                 "handle_awaitig_kind_of_help_wanted: received unexpected type of message {:?}",
@@ -214,11 +232,14 @@ async fn handle_awaiting_kind_of_help_providing(
             bot.send_message(
                 msg.chat.id,
                 "Наразі в нас є можливість координувати водіїв, що допомогають з евакуацією, надавати гуманітарну допомогу, та ми завжди відкриті до корисних контактів. Оберіть один з варіантів.",
-            ).reply_markup(teloxide::types::KeyboardMarkup::new(vec![vec![
-                teloxide::types::KeyboardButton::new("Я водій з власним авто"),
-                teloxide::types::KeyboardButton::new("Можу збирати гуманітарну чи фінансову допомогу"),
-                teloxide::types::KeyboardButton::new("Корисні контакти"),
-            ]]))
+            ).reply_markup(teloxide::types::KeyboardMarkup::new(vec![
+                vec![
+                    teloxide::types::KeyboardButton::new("Я водій з власним авто"),
+                    teloxide::types::KeyboardButton::new("Можу збирати гуманітарну чи фінансову допомогу"),
+                    teloxide::types::KeyboardButton::new("Корисні контакти"),
+                ],
+                vec![teloxide::types::KeyboardButton::new("ПОВЕРНУТИСЬ В ПОЧАТОК")],
+            ]))
             .await?;
             return Ok(());
         }
@@ -253,6 +274,16 @@ async fn handle_awaitig_kind_of_help_wanted(
                 })
                 .await?;
         }
+        Some("ПОВЕРНУТИСЬ В ПОЧАТОК") => {
+            dialogue.update(State::Start).await?;
+            bot.send_message(
+                msg.chat.id,
+                "Оберіть \"Я можу допомогти\" чи \"Я потребую допомоги\"",
+            )
+            .reply_markup(start_keyboard())
+            .await?;
+            return Ok(());
+        }
         _ => {
             log::info!(
                 "handle_awaitig_kind_of_help_wanted: received unexpected type of message {:?}",
@@ -262,10 +293,15 @@ async fn handle_awaitig_kind_of_help_wanted(
                 msg.chat.id,
                 "Наразі ми координуємо запити на евакуацію та гуманітарну допомогу.",
             )
-            .reply_markup(teloxide::types::KeyboardMarkup::new(vec![vec![
-                teloxide::types::KeyboardButton::new("Евакуація"),
-                teloxide::types::KeyboardButton::new("Потрібна гуманітарна допомога"),
-            ]]))
+            .reply_markup(teloxide::types::KeyboardMarkup::new(vec![
+                vec![
+                    teloxide::types::KeyboardButton::new("Евакуація"),
+                    teloxide::types::KeyboardButton::new("Потрібна гуманітарна допомога"),
+                ],
+                vec![teloxide::types::KeyboardButton::new(
+                    "ПОВЕРНУТИСЬ В ПОЧАТОК",
+                )],
+            ]))
             .await?;
             return Ok(());
         }
